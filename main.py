@@ -10,6 +10,7 @@ def collision(rect, pos):
             return False
 
 def draw_figure(coordinates,flag):
+    #may cause problem
     if flag==1:#for x
         fontx = pygame.font.SysFont('corbel', 70, True)
         textx = fontx.render('X',1 , (0,255,0))
@@ -59,7 +60,11 @@ def check_win(): #returns bool true if x wins
             return xwins(8)
         if score[6]==score[8] and score[8]==score[7]:
             return xwins(8)
+
+    '''if None not in score:
+        return "DRAW"'''
     
+
 def redrawWindow():
     #drawing lines of board.
     pygame.draw.line(win,(0,0,0),(w//3,0),(w//3,h),1)
@@ -94,6 +99,7 @@ rect9=draw_rectangle(2*w//3,2*h//3)
 score=[None for i in range(9)]
 
 flag=1
+figcount=0
 
 xWinScreen=False
 oWinSCreen=False
@@ -111,38 +117,48 @@ while run:
                 draw_figure((50,50),flag)
                 add_score(0)
                 flag*=-1
+                figcount+=1
             if collision(rect2,mousepos) and score[1]==None:
                 draw_figure((w//3+50,50),flag)
                 add_score(1)
                 flag*=-1
+                figcount+=1
             if collision(rect3,mousepos) and score[2]==None:
                 draw_figure((2*w//3+50,50),flag)
                 add_score(2)
                 flag*=-1
+                figcount+=1
             if collision(rect4,mousepos) and score[3]==None:
                 draw_figure((50,h//3+50),flag)
                 add_score(3)
                 flag*=-1
+                figcount+=1
             if collision(rect5,mousepos) and score[4]==None:
                 draw_figure((w//3+50,h//3+50),flag)
                 add_score(4)
                 flag*=-1
+                figcount+=1
             if collision(rect6,mousepos) and score[5]==None:
                 draw_figure((2*w//3+50,h//3+50),flag)
                 add_score(5)
                 flag*=-1
+                figcount+=1
             if collision(rect7,mousepos) and score[6]==None:
                 draw_figure((50,2*h//3+50),flag)
                 add_score(6)
                 flag*=-1
+                figcount+=1
             if collision(rect8,mousepos) and score[7]==None:
                 draw_figure((w//3+50,2*h//3+50),flag)
                 add_score(7)
                 flag*=-1
+                figcount+=1
             if collision(rect9,mousepos) and score[8]==None:
                 draw_figure((2*w//3+50,2*h//3+50),flag)
                 add_score(8)
                 flag*=-1
+                figcount+=1
+            
             x=check_win()
             if x:
                 #x wins screen.
@@ -152,8 +168,13 @@ while run:
                 #o wins
                 oWinSCreen=True
                 run=False
+            
+            if figcount==9:
+                drawScreen=True
+                run=False
             if x==None:
                 continue
+            
 
 win.fill([255,255,255])
 while xWinScreen:
@@ -175,6 +196,17 @@ while oWinSCreen:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             oWinSCreen=False
+
+    pygame.display.update()
+
+while drawScreen:
+    font = pygame.font.SysFont('corbel', 30, True)
+    text = font.render('Its a draw!',1 , (0,0,0))
+    win.blit(text, (20,120))
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            drawScreen=False
 
     pygame.display.update()
 
