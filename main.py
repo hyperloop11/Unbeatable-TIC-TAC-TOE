@@ -2,13 +2,16 @@ import pygame
 import random
 import math
 from sys import exit
+import os.path
+filepath = os.path.dirname(__file__)
+# filepath to call on external objects like sound files, background image, etc.
 
 def draw_rectangle(x,y):
     return pygame.Rect(x,y,w//3,h//3)
 
 def draw_X(coordinates):
     fontx = pygame.font.SysFont('corbel', 70, True)
-    textx = fontx.render('X',1 , (0,255,0))
+    textx = fontx.render('X',1 , (255,0,0))
     win.blit(textx, coordinates)
         
 def add_score(index):
@@ -61,7 +64,7 @@ def display_screen():
         tieScreen=True
         run=False
 
-#dummy function so that computer makes move in random available places
+#dummy computer move function that just returns random place for computer's turn
 '''
 def comp_move():
     freePlacesBoard = []
@@ -87,7 +90,8 @@ def comp_move():
         if score[i]=='':
             score[i]='O'#o placed
             value=minimax(score,0,False, -math.inf,math.inf)
-            score[i]=''#removes o to undo above change
+            #value=minimax(score)
+            score[i]=''
             if value>bestScore:
                 bestScore=value
                 bestMove=i
@@ -98,11 +102,12 @@ def comp_move():
     global xTurn
     xTurn=True
     display_screen()
+    #draw_figure(figpos[bestMove],1)
 
 
 def minimax(score,depth,isMaximizing,alpha,beta):
     result=check_win()
-    if result!='':#end condition for recursion
+    if result!='':
         if result=='O':
             return 10
         if result=='X':
@@ -113,9 +118,9 @@ def minimax(score,depth,isMaximizing,alpha,beta):
         bestScore=-math.inf
         for i in range(9):
             if score[i]=='':
-                score[i]='O'
+                score[i]='O'#o plays
                 value=minimax(score,depth+1,False,alpha,beta)
-                score[i]=''
+                score[i]=''#undo the move
                 bestScore=max(value,bestScore)
                 alpha = max(alpha, bestScore)  
   
@@ -129,7 +134,7 @@ def minimax(score,depth,isMaximizing,alpha,beta):
             if score[i]=='':
                 score[i]='X'#x plays
                 value=minimax(score,depth+1,True, alpha,beta)
-                score[i]=''
+                score[i]='' #undo the move
                 bestScore=min(value,bestScore)
                 beta = min(beta, bestScore)  
   
@@ -149,6 +154,11 @@ def redrawWindow():
 
 pygame.init()
 
+bgsound = pygame.mixer.Sound(filepath+'/bgmusic.wav')
+bgsound.play(-1)
+
+bg = pygame.image.load(filepath+ '/bg.jpg')
+
 w=500
 h=500
 win=pygame.display.set_mode((w,h))
@@ -156,7 +166,7 @@ win=pygame.display.set_mode((w,h))
 pygame.display.set_caption("TIC-TAC-TOE")
 clock = pygame.time.Clock()
 
-win.fill([255,255,255])
+win.blit(bg, (0,0))
 
 clock.tick(100)
 
@@ -255,12 +265,12 @@ while run:
                 if score.count('')!=0:
                     comp_move()
 
-win.fill([255,255,255])
+win.blit(bg, (0,0))
 
 while xWinScreen:
-    font = pygame.font.SysFont('corbel', 30, True)
-    text = font.render('The Winner Is X!',1 , (0,255,0))
-    win.blit(text, (20,120))
+    font = pygame.font.SysFont('consolas', 40, True)
+    text = font.render('The Winner Is X!',1 , (255,0,0))
+    win.blit(text, (75,210))
     pygame.display.update()
 
     for event in pygame.event.get():
@@ -269,9 +279,9 @@ while xWinScreen:
             exit()
 
 while oWinScreen:
-    font = pygame.font.SysFont('corbel', 30, True)
+    font = pygame.font.SysFont('consolas', 40, True)
     text = font.render('The Winner Is O!',1 , (0,0,255))
-    win.blit(text, (20,120))
+    win.blit(text, (75,210))
     pygame.display.update()
     
     for event in pygame.event.get():
@@ -280,9 +290,9 @@ while oWinScreen:
             exit()
 
 while tieScreen:
-    font = pygame.font.SysFont('corbel', 30, True)
-    text = font.render('Its a draw!',1 , (0,0,0))
-    win.blit(text, (20,120))
+    font = pygame.font.SysFont('consolas', 40, True)
+    text = font.render('Its a Draw!',1 , (0,0,0))
+    win.blit(text, (130,210))
     pygame.display.update()
 
     for event in pygame.event.get():
