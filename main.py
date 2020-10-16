@@ -61,6 +61,7 @@ def display_screen():
         tieScreen=True
         run=False
 
+#dummy function so that computer makes move in random available places
 '''
 def comp_move():
     freePlacesBoard = []
@@ -86,8 +87,7 @@ def comp_move():
         if score[i]=='':
             score[i]='O'#o placed
             value=minimax(score,0,False, -math.inf,math.inf)
-            #value=minimax(score)
-            score[i]=''
+            score[i]=''#removes o to undo above change
             if value>bestScore:
                 bestScore=value
                 bestMove=i
@@ -98,12 +98,11 @@ def comp_move():
     global xTurn
     xTurn=True
     display_screen()
-    #draw_figure(figpos[bestMove],1)
 
 
 def minimax(score,depth,isMaximizing,alpha,beta):
     result=check_win()
-    if result!='':
+    if result!='':#end condition for recursion
         if result=='O':
             return 10
         if result=='X':
@@ -114,7 +113,7 @@ def minimax(score,depth,isMaximizing,alpha,beta):
         bestScore=-math.inf
         for i in range(9):
             if score[i]=='':
-                score[i]='O'#x plays
+                score[i]='O'
                 value=minimax(score,depth+1,False,alpha,beta)
                 score[i]=''
                 bestScore=max(value,bestScore)
