@@ -61,13 +61,31 @@ def display_screen():
         tieScreen=True
         run=False
 
+'''
+def comp_move():
+    freePlacesBoard = []
+    for i in range(9):
+        if score[i]=='':
+            freePlacesBoard.append(i)
+    if(score.count('')!=0): 
+        t = random.randint(0, len(freePlacesBoard)-1)
+        score[freePlacesBoard[t]]='O' 
+        fonto = pygame.font.SysFont('corbel', 70, True)
+        texto = fonto.render('O',1 , (0,0,255))
+        win.blit(texto, figpos[freePlacesBoard[t]])
+    global xTurn
+    xTurn=True
+    display_screen()
+    print(check_win())
+    print(score)'''
+
 
 def comp_move():
     bestScore=-math.inf
     for i in range(9):
         if score[i]=='':
             score[i]='O'#o placed
-            value=minimax(score,0,False)
+            value=minimax(score,0,False, -math.inf,math.inf)
             #value=minimax(score)
             score[i]=''
             if value>bestScore:
@@ -83,7 +101,7 @@ def comp_move():
     #draw_figure(figpos[bestMove],1)
 
 
-def minimax(score,depth,isMaximizing):
+def minimax(score,depth,isMaximizing,alpha,beta):
     result=check_win()
     if result!='':
         if result=='O':
@@ -97,18 +115,28 @@ def minimax(score,depth,isMaximizing):
         for i in range(9):
             if score[i]=='':
                 score[i]='O'#x plays
-                value=minimax(score,depth+1,False)
+                value=minimax(score,depth+1,False,alpha,beta)
                 score[i]=''
                 bestScore=max(value,bestScore)
+                alpha = max(alpha, bestScore)  
+  
+                # Alpha Beta Pruning  
+                if beta <= alpha:  
+                    break
         return bestScore
     else:
         bestScore=math.inf
         for i in range(9):
             if score[i]=='':
                 score[i]='X'#x plays
-                value=minimax(score,depth+1,True)
+                value=minimax(score,depth+1,True, alpha,beta)
                 score[i]=''
                 bestScore=min(value,bestScore)
+                beta = min(beta, bestScore)  
+  
+                # Alpha Beta Pruning  
+                if beta <= alpha:  
+                    break 
         return bestScore
 
 
@@ -169,14 +197,12 @@ while run:
                 add_score(0)
                 xTurn=False
                 display_screen()
-                print(check_win())
                 if score.count('')!=0:
                     comp_move()
             if rect2.collidepoint(mousepos) and score[1]=='':
                 draw_X((w//3+50,50))
                 add_score(1)
                 xTurn=False
-                print(check_win())
                 display_screen()
                 if score.count('')!=0:
                     comp_move()
@@ -184,7 +210,6 @@ while run:
                 draw_X((2*w//3+50,50))
                 add_score(2)
                 xTurn=False
-                print(check_win())
                 display_screen()
                 if score.count('')!=0:
                     comp_move()
@@ -192,7 +217,6 @@ while run:
                 draw_X((50,h//3+50))
                 add_score(3)
                 xTurn=False
-                print(check_win())
                 display_screen()
                 if score.count('')!=0:
                     comp_move()
@@ -200,7 +224,6 @@ while run:
                 draw_X((w//3+50,h//3+50))
                 add_score(4)
                 xTurn=False
-                print(check_win())
                 display_screen()
                 if score.count('')!=0:
                     comp_move()
@@ -208,7 +231,6 @@ while run:
                 draw_X((2*w//3+50,h//3+50))
                 add_score(5)
                 xTurn=False
-                print(check_win())
                 display_screen()
                 if score.count('')!=0:
                     comp_move()
@@ -216,7 +238,6 @@ while run:
                 draw_X((50,2*h//3+50))
                 add_score(6)
                 xTurn=False
-                print(check_win())
                 display_screen()
                 if score.count('')!=0:
                     comp_move()
@@ -224,7 +245,6 @@ while run:
                 draw_X((w//3+50,2*h//3+50))
                 add_score(7)
                 xTurn=False
-                print(check_win())
                 display_screen()
                 if score.count('')!=0:
                     comp_move()
@@ -232,7 +252,6 @@ while run:
                 draw_X((2*w//3+50,2*h//3+50))
                 add_score(8)
                 xTurn=False
-                print(check_win())
                 display_screen()
                 if score.count('')!=0:
                     comp_move()
@@ -273,4 +292,4 @@ while tieScreen:
             exit()
 
 pygame.quit()
-        
+            
