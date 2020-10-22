@@ -58,6 +58,8 @@ def display_screen():
         xWinScreen=True
         run=False
     if TheWinner=='O':
+        sad = pygame.mixer.Sound(filepath+'/Sad-trombone.wav')
+        sad.play()
         oWinScreen=True
         run=False
     if TheWinner=='TIE':
@@ -109,9 +111,9 @@ def minimax(score,depth,isMaximizing,alpha,beta):
     result=check_win()
     if result!='':
         if result=='O':
-            return 10
+            return 10 -depth
         if result=='X':
-            return -10
+            return -10 +depth
         if result =='TIE':
             return 0
     if isMaximizing:
